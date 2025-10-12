@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ကံထူးရှင်များ ကြေညာခြင်း</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght300;400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Tailwind မသုံးသောကြောင့် Inter Font ကို Poppins ဖြင့် အစားထိုးလိုက်သည် -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     <style>
@@ -24,9 +25,11 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            padding-top: 10vh; 
+            /* Logo နေရာချရန်အတွက် padding-top ကို ပြင်လိုက်သည် */
+            padding-top: 5vh; 
             overflow-x: hidden;
             overflow-y: auto; 
+            position: relative; /* CTA button ကို နေရာချရန်အတွက် */
         }
         
         /* ======================================= */
@@ -60,9 +63,53 @@
                 opacity: 0; 
             }
         }
+        
+        /* ======================================= */
+        /* 2. LOGO AND CTA STYLES */
+        /* ======================================= */
+        
+        /* Logo (အပေါ်တည့်တည့်) */
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px; 
+            z-index: 10;
+        }
+        
+        .logo-img {
+            width: 150px; /* Logo အရွယ်အစား */
+            height: auto;
+            /* ရွှေရောင် glow effect */
+            filter: drop-shadow(0 0 10px #ffcc00); 
+            transition: transform 0.3s ease;
+        }
+        
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
+
+        /* CTA Button (ညာဘက်အပေါ်ထောင့်) */
+        .cta-link {
+            display: block; 
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 50; 
+            /* animation: pulse 1.5s infinite; <-- ရွှေရောင် Glow animation ကို ဖယ်ရှားလိုက်သည် */
+        }
+
+        .cta-img {
+            width: 80px; /* Desktop အတွက် CTA ပုံ အရွယ်အစား */
+            height: auto;
+            /* CTA ပုံနောက်က Shape (Border Radius & Shadow) များကို လုံးဝဖယ်ရှားလိုက်သည် */
+            border-radius: 0; 
+            box-shadow: none; 
+            cursor: pointer;
+        }
+        
+        /* @keyframes pulse ကို ဖယ်ရှားလိုက်သည် */
 
         /* ======================================= */
-        /* 2. EXISTING STYLES (MAIN CONTENT) */
+        /* 3. EXISTING STYLES (MAIN CONTENT) - CARD BACKGROUNDS RESTORED */
         /* ======================================= */
 
         .container {
@@ -97,14 +144,15 @@
             perspective: 1000px; 
         }
         
+        /* Winner Card Background & Shadow များကို မူလအတိုင်း ပြန်လည်ထားရှိလိုက်သည် */
         .pricing-card {
-            background: rgba(40, 40, 40, 0.7);
+            background: rgba(40, 40, 40, 0.7); 
             padding: 30px 20px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); 
             width: 300px;
             transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
-            border: 2px solid transparent;
+            border: 2px solid transparent; 
             position: relative;
             cursor: pointer; 
             /* Flex layout ဖြင့် ကတ်များ ပုံစံတူအောင် ပြင်ဆင်သည် */
@@ -115,32 +163,52 @@
             height: 350px; /* fixed height for uniform look */
         }
         
+        /* === WINNER BADGE STYLES === */
+        .winner-badge {
+            width: 150px; /* ပုံအရွယ်အစား */
+            height: auto;
+            margin-bottom: 10px; /* အောက်က rank စာသားနဲ့ ခွာရန် */
+            pointer-events: none; /* click event ကို အနှောင့်အယှက်မပေးအောင် */
+            position: absolute; /* ကတ်အပေါ်မှာ နေရာချရန် */
+            top: 30px; /* ကတ်ရဲ့ အပေါ်ပိုင်းမှာ ထားရန် */
+            z-index: 5;
+        }
+        
+        .pricing-card.standard .winner-badge {
+            width: 170px;
+            top: 10px; 
+        }
+        
         .card-content {
             /* Card content အားလုံးကို center ချသည် */
             text-align: center;
+            /* ပုံထည့်သွင်းပြီးနောက် စာသားများ နေရာရွှေ့ရန် */
+            margin-top: 150px;
         }
 
         .pricing-card.silver {
             /* Silver Card Style (2nd and 3rd) */
-            background: linear-gradient(135deg, rgba(20, 20, 20, 0.8), rgba(60, 60, 60, 0.8));
-            border-color: #444;
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.8), rgba(60, 60, 60, 0.8)); 
+            border-color: #444; 
             transform: scale(1);
         }
 
+        /* 1st Prize Card (Standard) ကို ပြန်ပြင်ထားသော Style */
         .pricing-card.standard {
-            /* Gold Card Style (1st Prize) */
-            background: linear-gradient(135deg, #ffcc00, #ff8c00);
-            box-shadow: 0 0 40px rgba(255, 140, 0, 0.7);
-            transform: translateY(-15px) scale(1.08); 
-            border-color: #ffcc00;
+            /* Silver ကတ်နှင့် နောက်ခံတူညီအောင် ပြန်ပြင်လိုက်သည် */
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.8), rgba(60, 60, 60, 0.8)); 
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.1); 
+            transform: translateY(-5px) scale(1.08); /* အရွယ်အစားနဲ့ နေရာကိုတော့ ထိန်းထားသည် */
+            border-color: #444; 
             z-index: 20;
         }
         
         .pricing-card.standard .rank, 
         .pricing-card.standard .winner-id,
         .pricing-card.standard .prize-amount {
-            color: #000; 
-            text-shadow: none;
+            /* စာသားအရောင်ကိုလည်း ဘေးကတ်များအတိုင်း ပြန်ပြင်သည် */
+            color: #fff; 
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
         }
         
         .rank {
@@ -152,7 +220,8 @@
         }
         
         .pricing-card.standard .rank {
-            color: #663300;
+             /* 1st Prize ရဲ့ rank စာသားကို အဝါနုရောင် ထားပေးသည် */
+            color: #ffcc00; 
         }
 
         .winner-id {
@@ -171,6 +240,8 @@
             padding: 10px;
             border-radius: 5px;
             color: #fff;
+            background: none; 
+            box-shadow: none;
         }
         
         .pricing-card.standard .prize-amount {
@@ -219,7 +290,7 @@
         }
         
         /* ======================================= */
-        /* 3. MODAL STYLES */
+        /* 4. MODAL STYLES */
         /* ======================================= */
         .modal-overlay {
             display: none; 
@@ -292,9 +363,23 @@
         }
 
         /* ======================================= */
-        /* MOBILE RESPONSIVENESS (3 CARDS SIDE-BY-SIDE) */
+        /* MOBILE RESPONSIVENESS (768px အောက်အတွက်) */
         /* ======================================= */
         @media (max-width: 768px) {
+            
+            .logo-img {
+                width: 100px; /* Mobile မှာ Logo အရွယ်အစား လျှော့ချခြင်း */
+            }
+            
+            /* CTA ကို Mobile မှာပါ ပြသနေဆဲ */
+            .cta-link {
+                display: block; 
+            }
+            
+            .cta-img {
+                width: 60px; /* Mobile မှာ CTA ပုံ အရွယ်အစား လျှော့ချခြင်း */
+            }
+            
             /* စာလုံးအရွယ်အစားများကို ဖုန်းမျက်နှာပြင်နှင့် လိုက်ဖက်အောင် ချိန်ညှိခြင်း */
             .title {
                 font-size: 1.5rem; 
@@ -345,6 +430,21 @@
             .pricing-card.standard .prize-amount {
                 font-size: 0.9rem;
             }
+            
+            /* Winner Badge နေရာချထားခြင်း (Mobile) */
+            .winner-badge {
+                width: 80px;
+                top: 5px;
+            }
+            
+            .pricing-card.standard .winner-badge {
+                width: 100px;
+                top: -5px; 
+            }
+            
+            .card-content {
+                margin-top: 70px; /* ပုံနေရာအတွက် နေရာပေးသည် */
+            }
 
             /* ဇယား စာလုံးများ အရွယ်အစား လျှော့ချခြင်း */
             .prize-table th, .prize-table td {
@@ -359,14 +459,26 @@
     <div class="particles-container"></div>
     
     <div class="fireworks-sky" style="display: none;"></div>
+    
+    <!-- CTA Button for Mobile View (ညာဘက်အပေါ်ထောင့်) -->
+    <a href="https://mssg.me/gkk99cta" target="_blank" class="cta-link">
+        <img src="CTA.png" alt="Call To Action Button" class="cta-img">
+    </a>
 
     <main class="container">
+        <!-- Logo နေရာချခြင်း -->
+        <div class="logo-container">
+            <img src="Logo99.png" alt="Company Logo" class="logo-img">
+        </div>
+        
         <h1 class="title">ကံထူးရှင်များ</h1>
         <p class="subtitle">iPhone 17 (Pro Max) နှင့် ငွေသားကံစမ်းမဲပွဲကြီး (01.10.2025 မှ 31.10.2025 အထိ)</p>
 
         <div class="plans-wrapper">
             
+            <!-- ဒုတိယဆု CARD (Winner2.png) -->
             <div class="pricing-card silver" data-name="ဒုတိယ" data-prize-model="Pro"> 
+                <img src="Winner2.png" alt="ဒုတိယဆုတံဆိပ်" class="winner-badge">
                 <div class="card-content">
                     <p class="rank">ဒုတိယ</p>
                     <p class="winner-id">t*s*8*5*2*</p> 
@@ -374,7 +486,9 @@
                 </div>
             </div>
 
+            <!-- ပထမဆု CARD (Winner1.png) -->
             <div class="pricing-card standard" data-name="ပထမ" data-prize-model="Pro Max"> 
+                <img src="Winner1.png" alt="ပထမဆုတံဆိပ်" class="winner-badge">
                 <div class="card-content">
                     <p class="rank">ပထမ</p>
                     <p class="winner-id">9*2*4*6*8*</p> 
@@ -382,7 +496,9 @@
                 </div>
             </div>
 
+            <!-- တတိယဆု CARD (Winner3.png) -->
             <div class="pricing-card silver" data-name="တတိယ" data-prize-model="Pro">
+                <img src="Winner3.png" alt="တတိယဆုတံဆိပ်" class="winner-badge">
                 <div class="card-content">
                     <p class="rank">တတိယ</p>
                     <p class="winner-id">d*m*n*c</p> 
@@ -410,6 +526,7 @@
         <div class="modal-content">
             <span class="close-button">&times;</span>
             <h3 id="modalTitle" class="modal-title-modal"></h3>
+            <!-- ပုံနာမည်ကို ပြင်လိုက်သည် -->
             <img id="prizeImage" class="prize-image" src="" alt="iPhone Prize Image">
             <p class="modal-description">ရရှိထားသော ဆု</p>
         </div>
@@ -533,8 +650,7 @@
                     
                     if (card.classList.contains('standard')) {
                         // 1st Prize Card အတွက် 3D Effect
-                        // Note: For mobile view, the scale is 1.05 (set in CSS media query)
-                        card.style.transform = `perspective(1000px) translateY(-15px) rotateX(${rotateX}deg) rotateY(${-rotateY}deg) scale(1.08)`;
+                        card.style.transform = `perspective(1000px) translateY(-5px) rotateX(${rotateX}deg) rotateY(${-rotateY}deg) scale(1.08)`;
                     } else {
                         // 2nd/3rd Prize Card အတွက် 3D Effect
                         card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${-rotateY}deg) scale(1.02)`;
@@ -543,7 +659,7 @@
 
                 card.addEventListener('mouseleave', () => {
                     if (card.classList.contains('standard')) {
-                        card.style.transform = 'perspective(1000px) translateY(-15px) rotateX(0) rotateY(0) scale(1.08)';
+                        card.style.transform = 'perspective(1000px) translateY(-5px) rotateX(0) rotateY(0) scale(1.08)';
                     } else {
                         card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
                     }
@@ -576,7 +692,8 @@
                     titleText = 'iPhone 17 Pro';
                 }
                 
-                prizeImage.src = imgUrl;
+                // ပုံဖိုင်တည်နေရာကို src ထဲကို ထည့်သွင်းသည်။
+                prizeImage.src = imgUrl; 
                 modalTitle.textContent = titleText;
                 modal.style.display = 'flex';
             }
