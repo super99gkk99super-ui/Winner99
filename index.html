@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ကံထူးရှင်များ ကြေညာခြင်း</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* GLOBAL RESET AND FONT */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            color: #fff; 
+        }
+
+        body {
+            /* နောက်ခံကို အမဲရောင် အတိအကျ ပြန်ပြောင်းလိုက်သည် */
+            background-color: #000000; 
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 10vh; 
+            overflow-x: hidden;
+            overflow-y: auto; 
+        }
+        
+        /* ======================================= */
+        /* 1. GOLD DUST PARTICLE BACKGROUND */
+        /* ======================================= */
+
+        .particles-container {
+            position: fixed; 
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1; 
+            overflow: hidden;
+        }
+
+        /* ရွှေမှုန် တစ်ခုချင်းစီအတွက် ပုံစံ */
+        .particle {
+            background-color: gold; 
+            border-radius: 50%;
+            position: absolute;
+            opacity: 0.8;
+            box-shadow: 0 0 5px gold;
+        }
+
+        /* ရွှေမှုန် ကျဆင်းခြင်း Animation */
+        @keyframes fall {
+            to {
+                transform: translateY(100vh); 
+                opacity: 0; 
+            }
+        }
+
+        /* ======================================= */
+        /* 2. EXISTING STYLES (MAIN CONTENT) */
+        /* ======================================= */
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            text-align: center;
+            z-index: 10; 
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+            color: #ffcc00; 
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px #ffcc00;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin-bottom: 40px;
+            color: #cccccc;
+        }
+
+        /* CARD SECTION */
+        .plans-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 80px; 
+            perspective: 1000px; 
+        }
+        
+        .pricing-card {
+            background: rgba(40, 40, 40, 0.7);
+            padding: 30px 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            width: 300px;
+            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+            border: 2px solid transparent;
+            position: relative;
+            cursor: pointer; 
+            /* Flex layout ဖြင့် ကတ်များ ပုံစံတူအောင် ပြင်ဆင်သည် */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 350px; /* fixed height for uniform look */
+        }
+        
+        .card-content {
+            /* Card content အားလုံးကို center ချသည် */
+            text-align: center;
+        }
+
+        .pricing-card.silver {
+            /* Silver Card Style (2nd and 3rd) */
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.8), rgba(60, 60, 60, 0.8));
+            border-color: #444;
+            transform: scale(1);
+        }
+
+        .pricing-card.standard {
+            /* Gold Card Style (1st Prize) */
+            background: linear-gradient(135deg, #ffcc00, #ff8c00);
+            box-shadow: 0 0 40px rgba(255, 140, 0, 0.7);
+            transform: translateY(-15px) scale(1.08); 
+            border-color: #ffcc00;
+            z-index: 20;
+        }
+        
+        .pricing-card.standard .rank, 
+        .pricing-card.standard .winner-id,
+        .pricing-card.standard .prize-amount {
+            color: #000; 
+            text-shadow: none;
+        }
+        
+        .rank {
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #cccccc;
+        }
+        
+        .pricing-card.standard .rank {
+            color: #663300;
+        }
+
+        .winner-id {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            /* Font size ကို ပြန်ပြင်သည် */
+            font-size: 1.5rem; 
+        }
+
+        .prize-amount {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            padding: 10px;
+            border-radius: 5px;
+            color: #fff;
+        }
+        
+        .pricing-card.standard .prize-amount {
+            font-size: 1.5rem;
+        }
+
+        /* TABLE SECTION */
+        .small-prize-section {
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: left;
+            padding-top: 20px; 
+            padding-bottom: 50px;
+        }
+        
+        .prize-table {
+            width: 100%;
+            border-collapse: separate; 
+            border-spacing: 0;
+            margin: 0 auto 50px auto;
+            background: rgba(40, 40, 40, 0.7);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .prize-table th, .prize-table td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 400;
+            color: #ccc;
+        }
+
+        .prize-table th {
+            background-color: rgba(60, 60, 60, 0.9);
+            font-weight: 600;
+            color: #ffcc00;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .prize-table tbody tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        /* ======================================= */
+        /* 3. MODAL STYLES */
+        /* ======================================= */
+        .modal-overlay {
+            display: none; 
+            position: fixed;
+            z-index: 100; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a1a, #333333);
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 15px 40px rgba(255, 255, 255, 0.2);
+            position: relative;
+            text-align: center;
+            transform: scale(0.9);
+            animation: modalappear 0.3s forwards;
+        }
+        
+        @keyframes modalappear {
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 30px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: #fff;
+            text-decoration: none;
+        }
+        
+        .modal-title-modal {
+            color: #ffcc00;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        
+        .prize-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
+        }
+        
+        .modal-description {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        /* ======================================= */
+        /* MOBILE RESPONSIVENESS (3 CARDS SIDE-BY-SIDE) */
+        /* ======================================= */
+        @media (max-width: 768px) {
+            /* စာလုံးအရွယ်အစားများကို ဖုန်းမျက်နှာပြင်နှင့် လိုက်ဖက်အောင် ချိန်ညှိခြင်း */
+            .title {
+                font-size: 1.5rem; 
+            }
+            .subtitle {
+                font-size: 0.5rem; 
+                margin-bottom: 20px; 
+            }
+            
+            .plans-wrapper {
+                /* ဖုန်းမှာ ၃ ခုယှဉ်ပြဖို့အတွက် ပြင်လိုက်သည် */
+                flex-direction: row; 
+                justify-content: space-between; 
+                gap: 5px; 
+                padding: 0 5px; 
+                margin-bottom: 30px; 
+            }
+            
+            .pricing-card {
+                width: 31%; 
+                height: 200px; 
+                padding: 10px 5px; 
+            }
+            
+            /* ပထမဆု ကတ်ကို အပေါ်နည်းနည်းမြှင့်ထားခြင်း */
+            .pricing-card.standard {
+                transform: translateY(-5px) scale(1.05); 
+            }
+            
+            /* ကတ်အတွင်း စာလုံးများ အရွယ်အစား လျှော့ချခြင်း */
+            .rank {
+                font-size: 0.7rem;
+                margin-bottom: 7px;
+            }
+
+            .winner-id {
+                font-size: 0.8rem;
+                margin-bottom: 8px; 
+            }
+
+            .prize-amount {
+                /* ဒုတိယ/တတိယဆုများအတွက် စာလုံးအရွယ်အစား */
+                font-size: 0.9rem; 
+                padding: 3px;
+            }
+            
+            /* ပထမဆု (Pro Max) ရဲ့ စာလုံးအရွယ်အစားကို 0.9rem သို့ ထပ်မံလျှော့ချလိုက်သည် */
+            .pricing-card.standard .prize-amount {
+                font-size: 0.9rem;
+            }
+
+            /* ဇယား စာလုံးများ အရွယ်အစား လျှော့ချခြင်း */
+            .prize-table th, .prize-table td {
+                padding: 8px; 
+                font-size: 0.7rem; 
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="particles-container"></div>
+    
+    <div class="fireworks-sky" style="display: none;"></div>
+
+    <main class="container">
+        <h1 class="title">ကံထူးရှင်များ</h1>
+        <p class="subtitle">iPhone 17 (Pro Max) နှင့် ငွေသားကံစမ်းမဲပွဲကြီး (01.10.2025 မှ 31.10.2025 အထိ)</p>
+
+        <div class="plans-wrapper">
+            
+            <div class="pricing-card silver" data-name="ဒုတိယ" data-prize-model="Pro"> 
+                <div class="card-content">
+                    <p class="rank">ဒုတိယ</p>
+                    <p class="winner-id">t*s*8*5*2*</p> 
+                    <p class="prize-amount">iPhone 17 (Pro)</p>
+                </div>
+            </div>
+
+            <div class="pricing-card standard" data-name="ပထမ" data-prize-model="Pro Max"> 
+                <div class="card-content">
+                    <p class="rank">ပထမ</p>
+                    <p class="winner-id">9*2*4*6*8*</p> 
+                    <p class="prize-amount">iPhone 17 (Pro Max)</p>
+                </div>
+            </div>
+
+            <div class="pricing-card silver" data-name="တတိယ" data-prize-model="Pro">
+                <div class="card-content">
+                    <p class="rank">တတိယ</p>
+                    <p class="winner-id">d*m*n*c</p> 
+                    <p class="prize-amount">iPhone 17 (Pro)</p> 
+                </div>
+            </div>
+        </div>
+
+        <div class="small-prize-section">
+            <table class="prize-table" id="small-winners-table">
+                <thead>
+                    <tr>
+                        <th>စဉ်</th>
+                        <th>ကံထူးရှင် ID</th>
+                        <th>ဆု</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
+    </main>
+
+    <div id="prizeModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3 id="modalTitle" class="modal-title-modal"></h3>
+            <img id="prizeImage" class="prize-image" src="" alt="iPhone Prize Image">
+            <p class="modal-description">ရရှိထားသော ဆု</p>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // ------------------------------------
+            // 1. GOLD DUST PARTICLES
+            // ------------------------------------
+            const container = document.querySelector('.particles-container');
+            const numberOfParticles = 120; 
+
+            for (let i = 0; i < numberOfParticles; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 3 + 2; 
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                particle.style.left = `${Math.random() * 100}%`;
+                
+                const duration = Math.random() * 7 + 8; 
+                particle.style.animation = `fall ${duration}s linear infinite`;
+                
+                particle.style.animationDelay = `-${Math.random() * 8}s`; 
+
+                container.appendChild(particle);
+            }
+            
+            // ------------------------------------
+            // 2. TABLE GENERATION (4-100)
+            // ------------------------------------
+            
+            // Username ၁၀၀ ဦး စာရင်း
+            const allWinnersList = [
+                "9*2*4*6*8*", "t*s*8*5*2*", "d*m*n*c", 
+                "a*n*1*4", "K*a*S*n*", "A*o*1*3*4*", 
+                "Y*m*n*u*g*", "s*k*k*a*n*", "M*a*1*3*4*", 
+                "h*y*2*3*8", "s*i*a*i*i*1*3", "S*m*i*g*u*a*h*n", 
+                "S*e*k*a*6*0", "s*n*i*2*8", "t*e*1*3*4", "u*l*c*k*l*y", 
+                "w*a*8*", "p*a*9*5", "C*a*4*", "M*m*o*1*6", 
+                "T*n*i*7*9*8*4*", "a*n*9*7*", "t*e*4*6*", "1*5*1*", 
+                "C*i*o*1*", "y*h*e*2*0*2*", "z*n*e*n*u*", "j*o*o*1*", 
+                "t*a*z*n*o*o*u*", "k*n*4", "K*e*K*a*J*", "t*a*s*u", 
+                "h*p*h*x", "H*1*3*9*4", "a*n*a*a*", "M*n*8*6*0*", 
+                "e*r*o*m*n*", "W*n*u*o*", "N*i*l*n*O", "w*i*u*", 
+                "T*u*a*6*0*5", "P*t*1*1", "K*C*8*", "g*k*9*h*o", 
+                "m*e*u*g*1*1", "Z*9*6", "K*y*y*", "W*n*a*o*", 
+                "A*n*9*1*9*", "z*n*i*1*3*5*", "m*n*2*2*2*", "M*K*V*9", 
+                "a*r*2*0*5", "g*o*6*8*8", "A*6*6*8*9*9*", "y*h*3*3", 
+                "H*u*m*a*a*g", "H*a*k*a*", "H*i*0*9", "9*6*6*6*5*4*1", 
+                "A*S*A*9*9*", "e*d*2*", "A*n*t*u*a*a*", "W*n*h*n*", 
+                "S*N*9", "m*n*2*3", "t*i*w*i*6", "K*r*2*1*1*0", 
+                "t*s*1*3*4", "M*o*e*", "T*S*4*6*8", "a*u*n*g*", 
+                "K*r*2*0*2", "9*5*4*8*4", "H*a*N*e", "M*5*5*6*6", 
+                "m*n*l*y", "a*n*k*a*7*9*", "t*s*b*n*9", "K*a*z*n*u*0*", 
+                "l*l*y*9*1", "T*n*a*S*e*", "S*y*r*o*k*", "L*y*1*3", 
+                "D*w*y*h*t*h*i*g", "K*u*t*a*", "H*n*a", "n*c*y*2*", 
+                "9*7*7*0*5", "D*w*y*t*6*0", "A*D*r", "M*u*g*", 
+                "5*8*3", "s*w*i*", "A*n*N*i*g*2", "W*n*a*o*", 
+                "A*n*3*2", "r*c*e*g*i", "m*1*3*5*", "p*p*p*",
+                "y*h*w*1*", "0*5*0*1*6*", "0*6*6*1*1*6" 
+            ].slice(0, 100); 
+            
+            const generateSmallWinners = () => {
+                const tableBody = document.querySelector('#small-winners-table tbody');
+                let html = '';
+                
+                // No. 4 မှ No. 100 အထိ Winner များကို ဇယားတွင် ထည့်သွင်းမည် (index 3 မှ စသည်)
+                for (let index = 3; index < allWinnersList.length; index++) {
+                    const no = index + 1; // စဉ်အမှတ် (4 မှ 100)
+                    const username = allWinnersList[index];
+                    let prize = 'N/A';
+
+                    // ဆုအရေအတွက်အလိုက် သတ်မှတ်ခြင်း 
+                    if (no >= 4 && no <= 6) {
+                        prize = '1,000,000 Ks'; 
+                    } else if (no >= 7 && no <= 10) {
+                        prize = '500,000 Ks'; 
+                    } else if (no >= 11 && no <= 20) {
+                        prize = '200,000 Ks'; 
+                    } else if (no >= 21 && no <= 50) {
+                        prize = '100,000 Ks'; 
+                    } else if (no >= 51 && no <= 100) {
+                        prize = '30,000 Ks'; 
+                    } 
+
+                    html += `
+                        <tr>
+                            <td>${no}</td>
+                            <td>${username}</td>
+                            <td>${prize}</td>
+                        </tr>
+                    `;
+                }
+                
+                tableBody.innerHTML = html;
+            };
+
+            // Page စတင် load ချိန်တွင် function ကို ခေါ်သည်
+            generateSmallWinners();
+            
+            // ------------------------------------
+            // 3. CARD HOVER EFFECT
+            // ------------------------------------
+            const cards = document.querySelectorAll('.pricing-card');
+
+            cards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+
+                    const rotateX = (y - centerY) / 20; 
+                    const rotateY = (x - centerX) / 20;
+                    
+                    if (card.classList.contains('standard')) {
+                        // 1st Prize Card အတွက် 3D Effect
+                        // Note: For mobile view, the scale is 1.05 (set in CSS media query)
+                        card.style.transform = `perspective(1000px) translateY(-15px) rotateX(${rotateX}deg) rotateY(${-rotateY}deg) scale(1.08)`;
+                    } else {
+                        // 2nd/3rd Prize Card အတွက် 3D Effect
+                        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${-rotateY}deg) scale(1.02)`;
+                    }
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    if (card.classList.contains('standard')) {
+                        card.style.transform = 'perspective(1000px) translateY(-15px) rotateX(0) rotateY(0) scale(1.08)';
+                    } else {
+                        card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+                    }
+                });
+            });
+            
+            
+            // ------------------------------------
+            // 4. IMAGE MODAL LOGIC (ပုံများ ထည့်သွင်းထားသည်)
+            // ------------------------------------
+
+            const modal = document.getElementById('prizeModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const prizeImage = document.getElementById('prizeImage');
+            const closeBtn = document.querySelector('.close-button');
+
+            // *** ဤနေရာတွင် ပုံ文件名များကို အသစ်ပြောင်းလိုက်သည် ***
+            const IMAGE_PRO_MAX = 'Pro Max.png'; // ပထမဆု (Pro Max) ပုံ
+            const IMAGE_PRO = 'Pro.png';   // ဒုတိယ/တတိယဆု (Pro) ပုံ
+
+            const openModal = (model) => {
+                let imgUrl = '';
+                let titleText = '';
+
+                if (model === 'Pro Max') {
+                    imgUrl = IMAGE_PRO_MAX;
+                    titleText = 'iPhone 17 Pro Max';
+                } else {
+                    imgUrl = IMAGE_PRO;
+                    titleText = 'iPhone 17 Pro';
+                }
+                
+                prizeImage.src = imgUrl;
+                modalTitle.textContent = titleText;
+                modal.style.display = 'flex';
+            }
+
+            const closeModal = () => {
+                modal.style.display = 'none';
+                prizeImage.src = ''; // Clear image source
+            }
+            
+            // Card ၃ ခုလုံးကို click listener ထည့်သည်
+            document.querySelectorAll('.pricing-card').forEach(card => {
+                card.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    
+                    const model = card.getAttribute('data-prize-model');
+                    if (model) {
+                        openModal(model);
+                    }
+                });
+            });
+
+            // Close button နှိပ်ရင် Modal ပိတ်သည်
+            closeBtn.addEventListener('click', closeModal);
+            
+            // Modal background ကို နှိပ်ရင် Modal ပိတ်သည်
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+            
+        });
+    </script>
+</body>
+</html>
